@@ -10,4 +10,7 @@ cd .git/hooks/
 ln -s ../../git-hooks/post-commit post-commit
 cd ../../
 ```
-
+Define the bucket to upload the templates to.
+``` shell
+export AWSBUCKET=my-dns-compliant-bucket
+```
