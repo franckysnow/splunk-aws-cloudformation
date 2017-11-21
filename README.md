@@ -6,6 +6,8 @@ CloudFormation scripts to deploy and install Splunk Enterprise.
 To deploy automatically to AWS, use git post-commit hook stored in git-hooks folder.
 
 ``` shell
-ln -s git-hooks/post-commit .git/hooks/post-commit 
+cd .git/hooks/
+ln -s ../../git-hooks/post-commit post-commit
+cd ../../
 ```
 
