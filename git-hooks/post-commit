@@ -1,13 +1,13 @@
 #! /bin/sh
 
 home=..
-path=splunk-deployment/templates/
+path=splunk-deployment/templates
 
 if [[ -z "${AWSBUCKET}" ]]; then
     echo "AWSBUCKET variable is unset. set using \"export AWSBUCKET=my-dns-compliant-bucket\""
     exit 1
-else
-    echo "uploading templates to S3 bucket"
-    aws s3 cp $home/templates s3://$AWSBUCKET/$path --recursive
 fi
+
+echo "uploading templates to S3 bucket"
+aws s3 cp $home/templates s3://$AWSBUCKET/$path/ --recursive
 
