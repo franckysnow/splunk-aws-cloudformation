@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Build a distributed Splunk cluster in a VPC with a bastion host.
+Parameters:
+  BucketName:
+    Description: Name of the S3 bucket storing the CloudFormation template
+    Type: String
+    MinLength: '1'
+    AllowedPattern: "[-_ a-zA-Z0-9]*"
+    ConstraintDescription: can contain only alphanumeric characters, spaces, dashes
+      and underscores.
+  SSHFrom:
+    Description: Lockdown SSH access to Bastion host (default can be accessed from
+      anywhere)
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 0.0.0.0/0
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: must be a valid CIDR range of the form x.x.x.x/x.
+Mappings:
+Resources:
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Metadata:
+      Comment: VPC with 1 or more subnets across different AZs.
+    Properties:
+      TemplateURL: 
+        Fn::Join:
+        - ""
+        - - https://s3-eu-west-1.amazonaws.com/
+          - Ref: BucketName
+          - /splunk-deployment/templates/splunk_network.template.yml
+      Parameters:
+        SSHLocation:
+          Ref: SSHFrom
+Outputs:
+  VpcId:
+    Value:
+      Fn::GetAtt:
+      - VPC
+      - Outputs.VpcId
+    Description: VPC ID of newly created VPC
