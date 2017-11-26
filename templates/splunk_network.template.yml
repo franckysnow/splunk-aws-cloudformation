@@ -229,7 +229,7 @@ Resources:
         CidrIp:
           Ref: SSHLocation
 Outputs:
-  VPCId:
+  VPCIdent:
     Description: VPCId of the newly created VPC
     Value:
       Ref: VPC

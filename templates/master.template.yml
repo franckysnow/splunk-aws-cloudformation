@@ -37,5 +37,5 @@ Outputs:
     Value:
       Fn::GetAtt:
       - VPC
-      - Outputs.VPCId
+      - Outputs.VPCIdent
     Description: VPC ID of newly created VPC
