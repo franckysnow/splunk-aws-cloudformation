@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation tempate for VPC with public and private subnets.
+Parameters:
+  SecurityGroupSearchHead:
+    Description: Security Group for search head host
+    Type: AWS::EC2::SecurityGroup::Id
+  SubnetIdSearchHead:
+    Description: SubnetId for search head host
+    Type: AWS::EC2::Subnet::Id
+  KeyNameSplunk:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+    Type: AWS::EC2::KeyPair::KeyName
+Resources:
+  SearchHeadHost:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-1a962263
+      KeyName:
+        Ref: KeyNameSplunk
+      SubnetId:
+        Ref: SubnetIdSearchHead
+      SecurityGroupIds:
+        - Ref: SecurityGroupSearchHead
+      Tags:
+      - Key: Name
+        Value:
+          Ref: AWS::StackName
+      - Key: Application
+        Value:
+          Ref: AWS::StackName
+      - Key: Network
+        Value: Public
+Outputs:
+  InstanceIdSearchHead:
+    Description: InstanceId of the newly created SearchHead Host
+    Value:
+      Ref: SearchHeadHost
+  InstanceIPAddressSearchHead:
+    Description: Private IP address of the newly created EC2 SearchHead Host
+    Value:
+      Fn::GetAtt:
+      - SearchHeadHost
+      - PrivateIpAddress

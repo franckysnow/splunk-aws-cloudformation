@@ -17,8 +17,11 @@ Parameters:
     Default: 0.0.0.0/0
     AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
     ConstraintDescription: must be a valid CIDR range of the form x.x.x.x/x.
-  KeyName:
+  KeyNameBastion:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the bastion host
+    Type: AWS::EC2::KeyPair::KeyName
+  KeyNameSplunk:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to Splunk SearchHead
     Type: AWS::EC2::KeyPair::KeyName
 Resources:
   VPC:
@@ -56,7 +59,29 @@ Resources:
           - VPC
           - Outputs.PublicSubnet
         KeyNameBastion:
-          Ref: KeyName
+          Ref: KeyNameBastion
+  SearchHeadHost:
+    Type: AWS::CloudFormation::Stack
+    Metadata:
+      Comment: Splunk SearchHead. Web accessible from the internet, and SSH through bastion host.
+    Properties:
+      TemplateURL: 
+        Fn::Join:
+        - ""
+        - - https://s3-eu-west-1.amazonaws.com/
+          - Ref: BucketName
+          - /splunk-deployment/templates/splunk_stack.template.yml
+      Parameters:
+        SecurityGroupSearchHead:
+          Fn::GetAtt:
+          - VPC
+          - Outputs.EC2SecurityGroupSearchHead
+        SubnetIdSearchHead:
+          Fn::GetAtt:
+          - VPC
+          - Outputs.PublicSubnet
+        KeyNameSplunk:
+          Ref: KeyNameSplunk
 Outputs:
   VpcId:
     Value:

@@ -228,6 +228,22 @@ Resources:
         ToPort: '22'
         CidrIp:
           Ref: SSHLocation
+  EC2SecurityGroupSearchHead:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable access to the SearchHead
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        ToPort: '8000'
+        CidrIp:
+          Ref: SSHLocation
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp:
+          Ref: SSHLocation
 Outputs:
   VPCIdent:
     Description: VPCId of the newly created VPC
