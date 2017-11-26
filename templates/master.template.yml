@@ -47,8 +47,6 @@ Resources:
           - Ref: BucketName
           - /splunk-deployment/templates/splunk_bastion.template.yml
       Parameters:
-        SSHLocation:
-          Ref: SSHFrom
         SecurityGroupBastion:
           Fn::GetAtt:
           - VPC
