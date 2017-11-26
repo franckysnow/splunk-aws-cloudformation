@@ -3,7 +3,7 @@
 home=..
 path=splunk-deployment/templates
 
-ls -la $GIT_DIR\..
+ls -la $GIT_DIR\\..
 
 if [[ -z "${AWSBUCKET}" ]]; then
     echo "AWSBUCKET variable is unset. set using \"export AWSBUCKET=my-dns-compliant-bucket\""
