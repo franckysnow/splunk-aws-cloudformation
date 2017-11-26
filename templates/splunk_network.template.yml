@@ -216,7 +216,7 @@ Resources:
         Ref: PublicSubnet
       NetworkAclId:
         Ref: PublicNetworkAcl
-  EC2SecurityGroup:
+  EC2SecurityGroupBastion:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Enable access to the EC2 host
@@ -237,4 +237,7 @@ Outputs:
     Description: SubnetId of the public subnet
     Value:
       Ref: PublicSubnet
-
+  EC2SecurityGroupBastion:
+    Description: Security Group for the bastion host
+    Value:
+      Ref: EC2SecurityGroupBastion 

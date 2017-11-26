@@ -17,6 +17,9 @@ Parameters:
     Default: 0.0.0.0/0
     AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
     ConstraintDescription: must be a valid CIDR range of the form x.x.x.x/x.
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the bastion host
+    Type: AWS::EC2::KeyPair::KeyName
 Resources:
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -32,6 +35,30 @@ Resources:
       Parameters:
         SSHLocation:
           Ref: SSHFrom
+  BastionHost:
+    Type: AWS::CloudFormation::Stack
+    Metadata:
+      Comment: Bastion host with attached EIP
+    Properties:
+      TemplateURL: 
+        Fn::Join:
+        - ""
+        - - https://s3-eu-west-1.amazonaws.com/
+          - Ref: BucketName
+          - /splunk-deployment/templates/splunk_bastion.template.yml
+      Parameters:
+        SSHLocation:
+          Ref: SSHFrom
+        SecurityGroupBastion:
+          Fn::GetAtt:
+          - VPC
+          - EC2SecurityGroupBastion
+        SubnetIdBastion:
+          Fn::GetAtt:
+          - VPC
+          - PublicSubnet
+        KeyNameBastion:
+          Ref: KeyName
 Outputs:
   VpcId:
     Value:
@@ -39,3 +66,9 @@ Outputs:
       - VPC
       - Outputs.VPCIdent
     Description: VPC ID of newly created VPC
+  BastionIpAddress:
+    Value:
+      Fn::GetAtt:
+      - BastionHost
+      - Outputs.InstanceIPAddressBastion
+    Description: Public IP address of the newly created bastion host
