@@ -16,5 +16,6 @@ aws cloudformation create-stack --stack-name Splunk-test \
     --template-url $stackURL \
     --parameters ParameterKey=SSHFrom,ParameterValue=$publicIpAddress/32 \
                  ParameterKey=BucketName,ParameterValue=franckysnow-utility \
-                 ParameterKey=KeyName,ParameterValue=Splunk-External
+                 ParameterKey=KeyNameBastion,ParameterValue=SplunkExternal \
+                 ParameterKey=KeyNameSplunk,ParameterValue=SplunkInternal
 

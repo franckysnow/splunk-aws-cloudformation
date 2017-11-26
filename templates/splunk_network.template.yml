@@ -236,6 +236,7 @@ Resources:
         Ref: VPC
       SecurityGroupIngress:
       - IpProtocol: tcp
+        FromPort: '8000'
         ToPort: '8000'
         CidrIp:
           Ref: SSHLocation
