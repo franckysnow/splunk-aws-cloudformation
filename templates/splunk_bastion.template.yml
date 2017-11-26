@@ -29,9 +29,7 @@ Resources:
         Ref: KeyNameBastion
       SubnetId:
         Ref: SubnetIdBastion
-      PrivateIpAddress:
-        Ref: SSHLocation
-      SecurityGroups:
+      SecurityGroupIds:
         - Ref: SecurityGroupBastion
       Tags:
       - Key: Name
