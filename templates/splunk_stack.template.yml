@@ -31,11 +31,24 @@ Resources:
           Ref: AWS::StackName
       - Key: Network
         Value: Public
+  IPAddress:
+    Type: AWS::EC2::EIP
+  IPAssoc:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      InstanceId:
+        Ref: SearchHeadHost
+      EIP:
+        Ref: IPAddress
 Outputs:
   InstanceIdSearchHead:
     Description: InstanceId of the newly created SearchHead Host
     Value:
       Ref: SearchHeadHost
+  InstanceIPAddressSearchHead:
+    Description: IP address of the newly created EC2 Search Head
+    Value:
+      Ref: IPAddress
   InstanceIPAddressSearchHead:
     Description: Private IP address of the newly created EC2 SearchHead Host
     Value:

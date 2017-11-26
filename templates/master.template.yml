@@ -95,3 +95,9 @@ Outputs:
       - BastionHost
       - Outputs.InstanceIPAddressBastion
     Description: Public IP address of the newly created bastion host
+  SearchHeadIpAddress:
+    Value:
+      Fn::GetAtt:
+      - SearchHeadHost
+      - Outputs.InstanceIPAddressSearchHead
+    Description: Public IP address of the newly created search head host
