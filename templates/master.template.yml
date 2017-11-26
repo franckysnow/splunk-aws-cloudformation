@@ -52,11 +52,11 @@ Resources:
         SecurityGroupBastion:
           Fn::GetAtt:
           - VPC
-          - EC2SecurityGroupBastion
+          - Outputs.EC2SecurityGroupBastion
         SubnetIdBastion:
           Fn::GetAtt:
           - VPC
-          - PublicSubnet
+          - Outputs.PublicSubnet
         KeyNameBastion:
           Ref: KeyName
 Outputs:
