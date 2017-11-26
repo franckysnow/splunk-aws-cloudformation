@@ -14,12 +14,12 @@ Mappings:
   SubnetConfig:
     VPC:
       CIDR: 10.0.0.0/16
-    Public-Bastion:
-      euwest1a: 10.0.0.32/28
-      euwest1b: 10.0.0.48/28
     Public-SearchHead:
       euwest1a: 10.0.0.0/28
       euwest1b: 10.0.0.16/28
+    Public-Bastion:
+      euwest1a: 10.0.0.32/28
+      euwest1b: 10.0.0.48/28
     Private-Utility:
       euwest1a: 10.0.1.0/28
       euwest1b: 10.0.1.16/28
@@ -242,8 +242,7 @@ Resources:
       - IpProtocol: tcp
         FromPort: '22'
         ToPort: '22'
-        CidrIp:
-          Ref: SSHLocation
+        CidrIp: 10.0.0.32/27
 Outputs:
   VPCIdent:
     Description: VPCId of the newly created VPC
@@ -257,3 +256,7 @@ Outputs:
     Description: Security Group for the bastion host
     Value:
       Ref: EC2SecurityGroupBastion 
+  EC2SecurityGroupSearchHead:
+    Description: Security Group for the SearchHead
+    Value:
+      Ref: EC2SecurityGroupSearchHead 
