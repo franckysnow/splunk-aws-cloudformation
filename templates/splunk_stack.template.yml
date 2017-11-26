@@ -18,10 +18,13 @@ Resources:
       ImageId: ami-1a962263
       KeyName:
         Ref: KeyNameSplunk
-      SubnetId:
-        Ref: SubnetIdSearchHead
-      SecurityGroupIds:
-        - Ref: SecurityGroupSearchHead
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: "true"
+        DeviceIndex: "0"
+        GroupSet:
+          - Ref: SecurityGroupSearchHead
+        SubnetId:
+          Ref: SubnetIdSearchHead
       Tags:
       - Key: Name
         Value:
@@ -31,24 +34,17 @@ Resources:
           Ref: AWS::StackName
       - Key: Network
         Value: Public
-  IPAddress:
-    Type: AWS::EC2::EIP
-  IPAssoc:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      InstanceId:
-        Ref: SearchHeadHost
-      EIP:
-        Ref: IPAddress
 Outputs:
   InstanceIdSearchHead:
     Description: InstanceId of the newly created SearchHead Host
     Value:
       Ref: SearchHeadHost
-  InstanceIPAddressSearchHead:
-    Description: IP address of the newly created EC2 Search Head
+  InstancePublicIPAddressSearchHead:
+    Description: Public IP address of the newly created EC2 Search Head
     Value:
-      Ref: IPAddress
+      Fn::GetAtt:
+      - SearchHeadHost
+      - PublicIp
   InstanceIPAddressSearchHead:
     Description: Private IP address of the newly created EC2 SearchHead Host
     Value:
