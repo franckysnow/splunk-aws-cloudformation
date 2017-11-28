@@ -72,6 +72,8 @@ Resources:
           - Ref: BucketName
           - /splunk-deployment/templates/splunk_stack.template.yml
       Parameters:
+        BucketName:
+          Ref: BucketName
         SecurityGroupSearchHead:
           Fn::GetAtt:
           - VPC

@@ -1,6 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: CloudFormation tempate for VPC with public and private subnets.
 Parameters:
+  BucketName:
+    Description: Bucket storing the s3 artefacts
+    Type: String
+    MinLength: '1'
+    AllowedPattern: "[-_ a-zA-Z0-9]*"
+     ConstraintDescription: can contain only alphanumeric characters, spaces, dashes and underscores.
   SecurityGroupSearchHead:
     Description: Security Group for search head host
     Type: AWS::EC2::SecurityGroup::Id
@@ -25,6 +31,8 @@ Resources:
           - Ref: SecurityGroupSearchHead
         SubnetId:
           Ref: SubnetIdSearchHead
+      IamInstanceProfile:
+        !Ref SearchHeadInstanceProfile
       Tags:
       - Key: Name
         Value:
@@ -34,6 +42,51 @@ Resources:
           Ref: AWS::StackName
       - Key: Network
         Value: Public
+  SearchHeadRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+  SearchHeadRolePolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: searchHead
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - s3:ListBucket
+          Resource:
+          - Fn::Join:
+            - ""
+            - "arn:aws:s3:::"
+            - Ref: BucketName
+        - Effect: Allow
+          Action:
+          - s3:GetObject
+          Resource:
+          - Fn::Join:
+            - ""
+            - "arn:aws:s3:::"
+            - Ref: BucketName
+            - "/splunk-deployment/*"
+      Roles:
+      - !Ref SearchHeadRole
+  SearchHeadInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+      - !Ref SearchHeadRole
 Outputs:
   InstanceIdSearchHead:
     Description: InstanceId of the newly created SearchHead Host
