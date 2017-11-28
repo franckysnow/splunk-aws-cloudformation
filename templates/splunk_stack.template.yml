@@ -35,13 +35,15 @@ Resources:
         !Ref SearchHeadInstanceProfile
       Tags:
       - Key: Name
-        Value:
-          Ref: AWS::StackName
-      - Key: Application
-        Value:
-          Ref: AWS::StackName
+        Value: SearchHead
       - Key: Network
         Value: Public
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          aws s3 cp s3://${ BucketName }/splunk-deployment/binaries/splunk-6.6.3-e21ee54bc796-linux-2.6-x86_64.rpm .
+          sudo rpm -i --prefix=/opt splunk-6.6.3-e21ee54bc796-linux-2.6-x86_64.rpm
+          sudo /opt/splunk/bin/splunk start --accept-license
   SearchHeadRole:
     Type: AWS::IAM::Role
     Properties:
@@ -98,7 +100,7 @@ Outputs:
       Fn::GetAtt:
       - SearchHeadHost
       - PublicIp
-  InstanceIPAddressSearchHead:
+  InstancePrivateIPAddressSearchHead:
     Description: Private IP address of the newly created EC2 SearchHead Host
     Value:
       Fn::GetAtt:
