@@ -25,12 +25,7 @@ Resources:
       Tags:
       - Key: Name
         Value:
-          Ref: AWS::StackName
-      - Key: Application
-        Value:
-          Ref: AWS::StackName
-      - Key: Network
-        Value: Public
+          Ref: Bastion
   IPAddress:
     Type: AWS::EC2::EIP
   IPAssoc:
