@@ -68,17 +68,17 @@ Resources:
           Resource:
           - Fn::Join:
             - ""
-            - "arn:aws:s3:::"
-            - Ref: BucketName
+            - - "arn:aws:s3:::"
+              - Ref: BucketName
         - Effect: Allow
           Action:
           - s3:GetObject
           Resource:
           - Fn::Join:
             - ""
-            - "arn:aws:s3:::"
-            - Ref: BucketName
-            - "/splunk-deployment/*"
+            - - "arn:aws:s3:::"
+              - Ref: BucketName
+              - "/splunk-deployment/*"
       Roles:
       - !Ref SearchHeadRole
   SearchHeadInstanceProfile:
