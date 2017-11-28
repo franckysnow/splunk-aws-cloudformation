@@ -23,6 +23,7 @@ stackURL=https://s3-eu-west-1.amazonaws.com/$AWSBUCKET/$bucketPath/master.templa
 echo $stackURL
 aws cloudformation create-stack --stack-name $stackName \
     --template-url $stackURL \
+    --capabilities CAPABILITY_IAM \
     --parameters ParameterKey=SSHFrom,ParameterValue=$publicIpAddress/32 \
                  ParameterKey=BucketName,ParameterValue=franckysnow-utility \
                  ParameterKey=KeyNameBastion,ParameterValue=SplunkExternal \
