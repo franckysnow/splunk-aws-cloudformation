@@ -6,7 +6,7 @@ Parameters:
     Type: String
     MinLength: '1'
     AllowedPattern: "[-_ a-zA-Z0-9]*"
-     ConstraintDescription: can contain only alphanumeric characters, spaces, dashes and underscores.
+    ConstraintDescription: can contain only alphanumeric characters, spaces, dashes and underscores.
   SecurityGroupSearchHead:
     Description: Security Group for search head host
     Type: AWS::EC2::SecurityGroup::Id
