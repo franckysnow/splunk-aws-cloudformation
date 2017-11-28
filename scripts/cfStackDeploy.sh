@@ -7,12 +7,21 @@ if [[ -z "${AWSBUCKET}" ]]; then
     exit 1
 fi
 
+
+stackName="Splunk-test"
+if [[ -n "$1" ]]; then
+    stackName=$1
+else
+    echo "no stack name defined, deploying as Splunk-test"
+fi
+
+
 # get my public ip address
 publicIpAddress=`curl -s https://api.ipify.org`
 
 stackURL=https://s3-eu-west-1.amazonaws.com/$AWSBUCKET/$bucketPath/master.template.yml
 echo $stackURL
-aws cloudformation create-stack --stack-name Splunk-test \
+aws cloudformation create-stack --stack-name $stackName \
     --template-url $stackURL \
     --parameters ParameterKey=SSHFrom,ParameterValue=$publicIpAddress/32 \
                  ParameterKey=BucketName,ParameterValue=franckysnow-utility \
