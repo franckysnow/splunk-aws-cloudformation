@@ -2,7 +2,14 @@
 
 CloudFormation scripts to deploy and install Splunk Enterprise.
 
-## Deploy to AWS with git post-commit hook
+## Deploy Splunk
+To deploy the CloudFormation Stack, you must have AWS CLI installed on your machine.
+
+``` shell
+./scripts/cfStackDeploy.sh
+```
+
+## Upload tempaltes to AWS with git post-commit hook
 To deploy automatically to AWS, use git post-commit hook stored in git-hooks folder.
 
 ``` shell
