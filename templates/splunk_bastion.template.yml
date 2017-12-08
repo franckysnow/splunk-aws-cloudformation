@@ -24,8 +24,7 @@ Resources:
         - Ref: SecurityGroupBastion
       Tags:
       - Key: Name
-        Value:
-          Ref: Bastion
+        Value: Bastion
   IPAddress:
     Type: AWS::EC2::EIP
   IPAssoc:
