@@ -151,13 +151,13 @@ Resources:
         Value: Private
   PrivateRoute:
     Type: AWS::EC2::Route
-    DependsOn: NatGateway
+    DependsOn: NATGateway
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId:
-        Ref: NatGateway
+        Ref: NATGateway
   PrivateSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
