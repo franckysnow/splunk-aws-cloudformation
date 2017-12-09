@@ -105,6 +105,12 @@ Resources:
         Ref: VPC
       InternetGatewayId:
         Ref: InternetGateway
+  NATGateway:
+    DependsOn: GatewayToInternet
+    Type: AWS::EC2::NatGateway
+    Properties:
+      SubnetId: 
+        Ref: PublicSubnet
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
@@ -132,6 +138,33 @@ Resources:
         Ref: PublicSubnet
       RouteTableId:
         Ref: PublicRouteTable
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPC
+      Tags:
+      - Key: Application
+        Value:
+          Ref: AWS::StackName
+      - Key: Network
+        Value: Private
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    DependsOn: NatGateway
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: NatGateway
+  PrivateSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: PrivateUtilitySubnet
+      RouteTableId:
+        Ref: PrivateRouteTable
   PublicNetworkAcl:
     Type: AWS::EC2::NetworkAcl
     Properties:
