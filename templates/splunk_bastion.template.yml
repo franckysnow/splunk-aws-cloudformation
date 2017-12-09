@@ -24,7 +24,12 @@ Resources:
         config:
           files:
             /home/ec2-user/SplunkInternal.pem:
-              source: s3://${ BucketName }/splunk-deployment/keys/SplunkInternal.pem
+              source: 
+                Fn::Join:
+                - ""
+                - - "s3://"
+                  - Ref: BucketName
+                  - "/splunk-deployment/keys/SplunkInternal.pem"
               mode: "000400"
               owner: "ec2-user"
               group: "ec2-user"
