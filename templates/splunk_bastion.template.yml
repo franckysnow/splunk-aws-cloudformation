@@ -19,26 +19,6 @@ Parameters:
 Resources:
   BastionHost:
     Type: AWS::EC2::Instance
-    Metadata:
-      AWS::CloudFormation::Authentication:
-        S3AccessCreds:
-          type: S3
-          roleName:
-            Ref: BastionRole 
-      AWS::CloudFormation::Init:
-        config:
-          files:
-            /home/ec2-user/SplunkInternal.pem:
-              source: 
-                Fn::Join:
-                - ""
-                - - "https://"
-                  - Ref: BucketName
-                  - ".s3.amazonaws.com/splunk-deployment/keys/SplunkInternal.pem"
-              mode: "000400"
-              owner: "ec2-user"
-              group: "ec2-user"
-              authentication: S3AccessCreds
     Properties:
       InstanceType: t2.micro
       ImageId: ami-1a962263
@@ -53,6 +33,12 @@ Resources:
       Tags:
       - Key: Name
         Value: Bastion
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          aws s3 cp s3://${ BucketName }/splunk-deployment/keys/SplunkInternal.pem . \\
+             && chown ec2-user:ec2-user SplunkInternal.pem \\
+             && chmod 400 SplunkInternal.pem
   BastionRole:
     Type: AWS::IAM::Role
     Properties:
