@@ -60,7 +60,7 @@ Resources:
   SearchHeadRolePolicies:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: searchHead
+      PolicyName: searchHeadS3Access
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -80,7 +80,7 @@ Resources:
             - ""
             - - "arn:aws:s3:::"
               - Ref: BucketName
-              - "/splunk-deployment/*"
+              - "/splunk-deployment/binaries/*"
       Roles:
       - !Ref SearchHeadRole
   SearchHeadInstanceProfile:

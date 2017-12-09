@@ -20,6 +20,11 @@ Resources:
   BastionHost:
     Type: AWS::EC2::Instance
     Metadata:
+      AWS::CloudFormation::Authentication:
+        S3AccessCreds:
+          type: S3
+          roleName:
+            Ref: BastionRole 
       AWS::CloudFormation::Init:
         config:
           files:
@@ -27,12 +32,13 @@ Resources:
               source: 
                 Fn::Join:
                 - ""
-                - - "s3://"
+                - - "https://"
                   - Ref: BucketName
-                  - "/splunk-deployment/keys/SplunkInternal.pem"
+                  - ".s3.amazonaws.com/splunk-deployment/keys/SplunkInternal.pem"
               mode: "000400"
               owner: "ec2-user"
               group: "ec2-user"
+              authentication: S3AccessCreds
     Properties:
       InstanceType: t2.micro
       ImageId: ami-1a962263
@@ -42,9 +48,56 @@ Resources:
         Ref: SubnetIdBastion
       SecurityGroupIds:
         - Ref: SecurityGroupBastion
+      IamInstanceProfile:
+        !Ref BastionInstanceProfile
       Tags:
       - Key: Name
         Value: Bastion
+  BastionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+  BastionRolePolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: bastionS3Access
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Action:
+          - s3:ListBucket
+          Resource:
+          - Fn::Join:
+            - ""
+            - - "arn:aws:s3:::"
+              - Ref: BucketName
+        - Effect: Allow
+          Action:
+          - s3:GetObject
+          Resource:
+          - Fn::Join:
+            - ""
+            - - "arn:aws:s3:::"
+              - Ref: BucketName
+              - "/splunk-deployment/keys/SplunkInternal.pem"
+      Roles:
+      - !Ref BastionRole
+  BastionInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+      - !Ref BastionRole
   IPAddress:
     Type: AWS::EC2::EIP
   IPAssoc:
