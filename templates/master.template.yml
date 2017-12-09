@@ -23,6 +23,11 @@ Parameters:
   KeyNameSplunk:
     Description: Name of an existing EC2 KeyPair to enable SSH access to Splunk SearchHead
     Type: AWS::EC2::KeyPair::KeyName
+  ChefPassword:
+    Description: Password to login to Chef service
+    Type: String
+    MinLength: '8'
+    Default: changeme
 Resources:
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -38,6 +43,30 @@ Resources:
       Parameters:
         SSHLocation:
           Ref: SSHFrom
+  ChefHost:
+    Type: AWS::CloudFormation::Stack
+    Metadata:
+      Comment: Chef host deployed in private utility subnet
+    Properties:
+      TemplateURL: 
+        Fn::Join:
+        - ""
+        - - https://s3-eu-west-1.amazonaws.com/
+          - Ref: BucketName
+          - /splunk-deployment/templates/splunk_chef.template.yml
+      Parameters:
+        BucketName:
+          Ref: BucketName
+        SecurityGroupChef:
+          Fn::GetAtt:
+          - VPC
+          - Outputs.EC2SecurityGroupChef
+        SubnetIdChef:
+          Fn::GetAtt:
+          - VPC
+          - Outputs.PrivateUtilitySubnet
+        KeyNameSplunk:
+          Ref: KeyNameSplunk
   BastionHost:
     Type: AWS::CloudFormation::Stack
     Metadata:

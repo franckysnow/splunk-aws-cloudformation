@@ -257,6 +257,28 @@ Resources:
         FromPort: '22'
         ToPort: '22'
         CidrIp: 10.0.0.32/27
+  EC2SecurityGroupChef:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable access to the Chef server
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+      - Description: HTTP access to nginx for Chef web interface and API requests
+        IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: 10.0.0.0/16
+      - Description: HTTPS access to nginx for Chef web interface and API requests
+        IpProtocol: tcp
+        FromPort: '443'
+        ToPort: '443'
+        CidrIp: 10.0.0.0/16
+      - Description: SSH access to Chef server from jump host
+        IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 10.0.0.32/27
 Outputs:
   VPCIdent:
     Description: VPCId of the newly created VPC
@@ -266,6 +288,10 @@ Outputs:
     Description: SubnetId of the public subnet
     Value:
       Ref: PublicSubnet
+  PrivateUtilitySubnet:
+    Description: SubnetId of the private utility subnet
+    Value:
+      Ref: PrivateUtilitySubnetA
   EC2SecurityGroupBastion:
     Description: Security Group for the bastion host
     Value:
@@ -274,3 +300,7 @@ Outputs:
     Description: Security Group for the SearchHead
     Value:
       Ref: EC2SecurityGroupSearchHead 
+  EC2SecurityGroupChef:
+    Description: Security Group for the Chef
+    Value:
+      Ref: EC2SecurityGroupChef 

@@ -7,6 +7,10 @@ if [[ -z "${AWSBUCKET}" ]]; then
     exit 1
 fi
 
+if [[ -z "${AWSCHEFPASS}" ]]; then
+    echo "AWSCHEFPASS variable is unset. set using \"export AWSCHEFPASS=my-strong-password\""
+    exit 1
+fi
 
 stackName="Splunk-test"
 if [[ -n "$1" ]]; then
@@ -27,5 +31,6 @@ aws cloudformation create-stack --stack-name $stackName \
     --parameters ParameterKey=SSHFrom,ParameterValue=$publicIpAddress/32 \
                  ParameterKey=BucketName,ParameterValue=franckysnow-utility \
                  ParameterKey=KeyNameBastion,ParameterValue=SplunkExternal \
-                 ParameterKey=KeyNameSplunk,ParameterValue=SplunkInternal
+                 ParameterKey=KeyNameSplunk,ParameterValue=SplunkInternal \
+                 ParameterKey=ChefPassword,ParameterValue=$AWSCHEFPASS
 
