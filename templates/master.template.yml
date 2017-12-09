@@ -79,6 +79,8 @@ Resources:
           - Ref: BucketName
           - /splunk-deployment/templates/splunk_bastion.template.yml
       Parameters:
+        BucketName:
+          Ref: BucketName
         SecurityGroupBastion:
           Fn::GetAtt:
           - VPC
