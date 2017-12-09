@@ -111,7 +111,7 @@ Resources:
     Properties:
       AllocationId:
         Fn::GetAtt:
-        - EIP
+        - NatEIP
         - AllocationId
       SubnetId: 
         Ref: PublicSubnet
