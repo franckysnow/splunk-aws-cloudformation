@@ -111,6 +111,10 @@ Resources:
     Properties:
       SubnetId: 
         Ref: PublicSubnet
+  NatEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:

@@ -24,10 +24,13 @@ Resources:
       ImageId: ami-1a962263
       KeyName:
         Ref: KeyNameBastion
-      SubnetId:
-        Ref: SubnetIdBastion
-      SecurityGroupIds:
-        - Ref: SecurityGroupBastion
+      NetworkInterfaces:
+      - AssociatePublicIpAddress: "true"
+        DeviceIndex: "0"
+        GroupSet:
+          - Ref: SecurityGroupBastion
+        SubnetId:
+          Ref: SubnetIdBastion
       IamInstanceProfile:
         !Ref BastionInstanceProfile
       Tags:
@@ -84,15 +87,6 @@ Resources:
       Path: "/"
       Roles:
       - !Ref BastionRole
-  IPAddress:
-    Type: AWS::EC2::EIP
-  IPAssoc:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      InstanceId:
-        Ref: BastionHost
-      EIP:
-        Ref: IPAddress
 Outputs:
   InstanceIdBastion:
     Description: InstanceId of the newly created Bastion Host
@@ -101,4 +95,6 @@ Outputs:
   InstanceIPAddressBastion:
     Description: IP address of the newly created EC2 Bastion Host
     Value:
-      Ref: IPAddress
+      Fn::GetAtt:
+      - BastionHost
+      - PrivateIp
