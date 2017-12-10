@@ -12,7 +12,7 @@ do
 done
 
 #aws cloudformation validate-template --template-body file://path/to/template.yaml
-
+#test
 
 #
 # An example hook script to verify what is about to be committed.
