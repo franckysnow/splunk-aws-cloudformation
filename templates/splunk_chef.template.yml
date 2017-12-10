@@ -20,7 +20,7 @@ Resources:
   ChefHost:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: t2.medium
       ImageId: ami-1a962263
       KeyName:
         Ref: KeyNameSplunk
@@ -50,13 +50,13 @@ Resources:
           # download the Chef server package
           if [ ! -f /downloads/chef-server-core_12.16.2_amd64.deb ]; then
             echo "Downloading the Chef server package..."
-            wget -nv -P /downloads https://packages.chef.io/files/stable/chef-server/12.16.2/ubuntu/16.04/chef-server-core_12.16.2-1_amd64.deb
+            wget -nv -P /downloads https://packages.chef.io/files/stable/chef-server/12.17.5/el/7/chef-server-core-12.17.5-1.el7.x86_64.rpm
           fi
           
           # install Chef server
           if [ ! $(which chef-server-ctl) ]; then
             echo "Installing Chef server..."
-            dpkg -i /downloads/chef-server-core_12.16.2-1_amd64.deb
+            yum install -y /downloads/chef-server-core-12.17.5-1.el7.x86_64.rpm
             chef-server-ctl reconfigure
           
             echo "Waiting for services..."
