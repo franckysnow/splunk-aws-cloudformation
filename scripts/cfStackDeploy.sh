@@ -19,13 +19,17 @@ else
     echo "no stack name defined, deploying as Splunk-test"
 fi
 
+command="create-stack"
+if [[ "$2" == "update" ]]; then
+    command="update-stack"
+fi
 
 # get my public ip address
 publicIpAddress=`curl -s https://api.ipify.org`
 
 stackURL=https://s3-eu-west-1.amazonaws.com/$AWSBUCKET/$bucketPath/master.template.yml
 echo $stackURL
-aws cloudformation create-stack --stack-name $stackName \
+aws cloudformation $command --stack-name $stackName \
     --template-url $stackURL \
     --capabilities CAPABILITY_IAM \
     --parameters ParameterKey=SSHFrom,ParameterValue=$publicIpAddress/32 \
