@@ -1,18 +1,20 @@
 #!/bin/sh
 # Check if all cloud formation templates are formatted properly
 
-home=$GIT_DIR\\..
-#home=".."
-templateLoc="templates/"
-path=${home}/${templateLoc}
+changedFiles=`git diff --cached --name-status | awk '$1 != "D" { print $2 }'`
 
-# foreach
-for f in `ls $path*.template.yml`; do
-    template=`readlink -f ${path}${f}`
-    
-    # stop if there is a template error
-    # discard output if no error
-    aws cloudformation validate-template --template-body file://$template > /dev/null || exit 1
+for file in $changedFiles; do
+
+    # check if file is a CloudFormation template *.template.yml
+    if [[ $file =~ .template.yml$ ]]; then
+        echo "checking CloudFormation template format: $file"
+        
+        template=`readlink -f ${file}`
+
+        # stop if there is a template error
+        # discard output if no error
+        aws cloudformation validate-template --template-body file://$template > /dev/null || exit 1
+    fi
 done
 
 exit 0
